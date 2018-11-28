@@ -1,0 +1,4 @@
+
+]
+indy:snapstore-server dls$ mongo ds115866.mlab.com:15866/snapperstore -u ssuser  -p sstest
+
