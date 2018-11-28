@@ -1,4 +1,4 @@
-# Snapperstore
+# MediaShishKebab
 
 ## Sample image, audio, and video upload client &amp; server
 
@@ -16,6 +16,8 @@ It is not intended to be a production level example of validation, error handlin
 
 This uses Vue.js Dynamic Components.  This is a good alternative to having a lot of v-if/else within a template.
 
+This is an update of a previous project (SnapperStore).  I wanted to focus on what it would be like to add the feature of posting to a headless WordPress install.
+
 ## Features
 
 * display groups of images, audio(mp3), and video(mp4) by day uploaded
@@ -27,22 +29,27 @@ This uses Vue.js Dynamic Components.  This is a good alternative to having a lot
 * extensive tags (direct and multiple tag search) with (needs DB)
 * can run with or without MongoDB
 * email admin when new media uploades (needs SendGrid)
+* post to WordPress
 
 ## Build Setup
 
 After cloning the repository, you will see this directory structure:
 ```
-snapperstore
-├── snapstore-client
-│   ├── public
-│   └── src
-└── snapstore-server
+MediaShishKebab/
+├── client
+│   ├── public
+│   └── src
+├── common
+└── server
+    ├── dist
+    ├── models
+    └── public
 ```
 You may want to open up two shells - one for server, one for client.
 
 ### Server Side
 ``` bash
-cd snapstore-server
+cd server
 
 ```
 
@@ -56,8 +63,10 @@ The configuration for the server is kept in config.json:
   "SS_ADMIN_EMAIL": "youradmin@yourdomain.com",
   "SS_ADMIN_FROM": "whoSentIt@example.com",
   "MONGO_DB_HOST": "mongo host",
-  "MONGO_DB_CONNECT": "mongodb://localhost/snapperstore",
-  "SERVER_ADDRESS": "http://localhost:3100",
+  "MONGO_DB_CONNECT": "mongodb://localhost/snapstore",
+
+
+  "SERVER_ADDRESS": "http://localhost:8081",
   "CLIENT_ADDRESS": "http://localhost:8080"
 }
 ```
@@ -74,20 +83,34 @@ npm run server
 ### Client Side
 
 ```
-cd snapstore-client
+cd client
 ```
 
 The configuration for the client is kept in src/config.js:
 
 ```
+// for use by client side
 const configs = {
   ENV: 'Local Dev',
   CLIENT: 'http://localhost:8080',
-  SERVER: 'http://localhost:3100',
-  USE_DB: 1,
-  USE_EMAIL: 0
-}
+  SERVER: 'http://localhost:8081',
 
+  SERVER_API: 'http://localhost:8081/api',
+  
+  USE_DB: 1,
+  USE_EMAIL: 0,
+  USE_WP: 1,
+  
+  // point at your own WP server
+  WP_HOST: 'http://wp.dls',
+  
+  // your login..
+  WP_USER: 'YOUR_WP_USERNAME',
+  
+  // your password...
+  WP_PASSWORD: 'YOUR_WP_PASSWORD',
+  USE_TMP: ''
+}
 ```
 The `USE_DB` and `USE_EMAIL` should match what you have set up for the server side.
 
@@ -101,8 +124,6 @@ npm run dev
 ```
 
 ### Getting Started
-
-*For an extensive writeup on how to deploy this on Digital Ocean, mLab, and SendGrid, see my Medium article TK*
 
 Once the client and server sides are running, you will see a mostly empty page at http://localhost:8080/
 
@@ -131,11 +152,12 @@ Clicking on the pencil button for any item will allow you to add and remove tags
 
 ### Notes on DB and Email
 
+>> TK .. check this..
 SnapperStore will run without a DB.  It will store media items on the server, and you can browse them by day.
 
 The default setup assumes you are running a local instance of MongoDB.  If you dont wish to set that up, an alternative is to use mLab.com.  That will let you point to a free sandbox MongoDB instance.
 
-SnapperStore also has an example of calling email from Node.js.  To enable this, set up an account at https://sendgrid.com  Once you have that going, set `USE_EMAIL` to 1 on the client side (src/config.js) and `USING_EMAIL` to 1 on the server side (config.json).  Yes, these should be named the same for both sides (will update).  The example is pretty basic: Change the config file to utilize `SS_ADMIN_EMAIL` (who to send the email to) and `SS_ADMIN_FROM` (who it should appear to come from)
+MediaShishKebab also has an example of calling email from Node.js.  To enable this, set up an account at https://sendgrid.com  Once you have that going, set `USE_EMAIL` to 1 on the client side (src/config.js) and `USING_EMAIL` to 1 on the server side (config.json).  Yes, these should be named the same for both sides (will update).  The example is pretty basic: Change the config file to utilize `SS_ADMIN_EMAIL` (who to send the email to) and `SS_ADMIN_FROM` (who it should appear to come from)
 
 ### End Note
 
